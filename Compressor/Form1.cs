@@ -46,6 +46,7 @@ namespace Compressor
             Process process = new Process();
             process.StartInfo.FileName = "ffmpeg.exe";
             process.StartInfo.Arguments = arguments;
+            process.StartInfo.WorkingDirectory = @"C:\PATH_Programs";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             process.EnableRaisingEvents = true;

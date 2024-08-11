@@ -9,7 +9,7 @@ This is a simple media compression application developed using C# and Windows Fo
 
 Form view:
 
-[Form view](https://i.imgur.com/mrC9Wqy.png)
+![Form view](https://i.imgur.com/mrC9Wqy.png)
 
 ## Setup
 ## 1. Clone this repo:

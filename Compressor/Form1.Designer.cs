@@ -277,7 +277,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "CompressorVideo";
+            Text = "Media Compressor";
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)compressionValue).EndInit();
             ResumeLayout(false);

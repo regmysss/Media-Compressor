@@ -8,24 +8,26 @@ namespace Compressor
         private string pathOutput = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos));
         private Dictionary<string, string> codecV = new Dictionary<string, string>()
         {
-            {"H.264", "libx264" },
-            {"H.265", "libx265" },
+            {"Default","h264_nvenc"},
+            {"H.264 (CUDA)", "h264_nvenc" },
+            {"H.264 (CPU)", "h264" },
+            {"H.265 (CPU)", "libx265" },
+            {"H.265 (CUDA)", "hevc_nvenc" },
             {"VP9", "libvpx-vp9" },
             {"AV1", "libaom-av1" },
             {"MPEG-4", "mpeg4" },
-            {"MJPEG", "libx265" },
-            {"Default","libx264"}
+            {"MJPEG", "libx265" }
         };
 
         private Dictionary<string, string> codecA = new Dictionary<string, string>()
         {
+            {"Default","libmp3lame"},
             {"AAC", "aac" },
             {"MP3", "libmp3lame" },
             {"Opus", "libopus" },
             {"WAV", "pcm_s16le" },
             {"Dolby AC-3", "ac3" },
-            {"DTS", "dca" },
-            {"Default","libmp3lame"}
+            {"DTS", "dca" }
         };
 
         public Form1()
@@ -35,18 +37,21 @@ namespace Compressor
         private void Form1_Load(object sender, EventArgs e)
         {
             textBox2.Text = pathOutput;
-            bitrateAudio.SelectedIndex = 0;
-            bitrateVideo.SelectedIndex = 0;
-            nameCodecAudio.SelectedIndex = 0;
+
+            nameCodecVideo.Items.AddRange(codecV.Keys.ToArray());
+            nameCodecAudio.Items.AddRange(codecA.Keys.ToArray());
+
             nameCodecVideo.SelectedIndex = 0;
+            nameCodecAudio.SelectedIndex = 0;
+            bitrateVideo.SelectedIndex = 0;
+            bitrateAudio.SelectedIndex = 0;
         }
 
         private Task StartFfmpeg(string arguments)
         {
             Process process = new Process();
-            process.StartInfo.FileName = "ffmpeg.exe";
+            process.StartInfo.FileName = "ffmpeg";
             process.StartInfo.Arguments = arguments;
-            process.StartInfo.WorkingDirectory = @"C:\PATH_Programs";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             process.EnableRaisingEvents = true;
@@ -75,21 +80,11 @@ namespace Compressor
                 return "";
             }
 
-            string arguments = $"-i \"{pathInput[0]}\"";
+            string arguments = $"-i \"{pathInput[0]}\" -c:v {codecV[nameCodecVideo.Text]} -c:a {codecA[nameCodecAudio.Text]}";
 
             if (compressionValue.Value != 0)
             {
                 arguments += $" -crf {compressionValue.Value}";
-            }
-
-            if (nameCodecVideo.Text != "Default")
-            {
-                arguments += $" -vcodec {codecV[nameCodecVideo.Text]}";
-            }
-
-            if (nameCodecAudio.Text != "Default")
-            {
-                arguments += $" -acodec {codecA[nameCodecAudio.Text]}";
             }
 
             if (bitrateVideo.Text != "Default")
